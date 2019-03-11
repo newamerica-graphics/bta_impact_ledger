@@ -138,19 +138,19 @@
     align-items: center;
     margin: 0.125rem;
     margin-left: 0;
-    padding: 0 .5rem;
+    padding: 0 0.5rem;
     height: 1.25rem;
-    border-radius: .9375rem;
+    border-radius: 0.9375rem;
     background-color: #8bd9c5;
     color: #333;
     vertical-align: baseline;
     font-size: 0.75rem;
   }
   .dv-Dashboard__tag-title {
-    padding-right: .5rem;
+    padding-right: 0.5rem;
     padding-left: 13px;
     font-weight: bold;
-    font-size: .875rem;
+    font-size: 0.875rem;
   }
 }
 
@@ -171,46 +171,75 @@
   }
 }
 
-.dv-Dashboard__icon {
+.rt-td.dv-Dashboard__icon {
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.na-icon {
-  svg {
-    width: 12px;
-    height: 12px;
+.dv-icon {
+  width: 16px;
+  height: 16px;
 
-    fill: #333;
-  }
+  fill: #333;
 }
 
-.icon-plus {
-  position: relative;
-  display: inline-block;
-  width: 12px;
-  height: 12px;
+.dv-Dashboard__modal-trigger {
+  margin: 0;
+  padding: 0;
+  height: 1rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
 
-  @include transition(transform 0.35s ease);
-  @include transform(rotate(0deg));
-  &>* {
-    position: absolute;
-    display: block;
-    width: 100%;
-    height: 1px;
-    background: #333;
-  }
-  &>*:first-child {
-    @include vertical-center;
-  }
-  &>*:nth-child(2) {
-    top: 50%;
-    left: 50%;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
 
-    @include transform(translate(-50%, -50%) rotate(90deg));
-  }
-  &.x {
-    @include transform(rotate(45deg));
-  }
+.dv-Modal {
+  position: absolute;
+  top: 30px;
+  right: 0;
+  bottom: 30px;
+  left: 0;
+  margin-right: auto;
+  margin-left: auto;
+  max-width: 1200px;
+  border-radius: 4px;
+  background-color: #fff;
+}
+
+.dv-Modal__overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(51, 51, 51, .3);
+}
+
+.dv-Modal__contents {
+  display: flex;
+  overflow: auto;
+  flex-wrap: wrap;
+  padding: 2rem;
+}
+
+.dv-Modal__item {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  width: 50%;
+}
+
+.dv-Modal__key {
+  padding-bottom: 0.5rem;
+  font-weight: bold;
+}
+
+.dv-Modal__value {}
+
+.ReactModal__Body--open,
+.ReactModal__Html--open {
+  overflow: hidden;
 }

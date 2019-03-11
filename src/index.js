@@ -8,14 +8,18 @@ let data = null;
 
 const settings = {
   dashboard: el => {
-    const _data = data.dashboard;
-    ReactDOM.render(<Dashboard data={_data} />, el);
+    ReactDOM.render(
+      <Dashboard
+        tableData={data.table}
+        popupData={data.popup}
+        filters={data.filters}
+      />,
+      el
+    );
   }
 };
 
-fetch(
-  "https://na-data-projects.s3.amazonaws.com/data/epp/polling_dashboard.json"
-)
+fetch("https://na-data-projects.s3.amazonaws.com/data/bta/impact_ledger.json")
   .then(response => response.json())
   .then(_data => {
     data = _data;

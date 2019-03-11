@@ -2,117 +2,83 @@ import React from "react";
 import { ChartContainer, Title } from "@newamerica/meta";
 import Sidebar from "./Sidebar";
 import { DataTableWithSearch } from "@newamerica/data-table";
-import DownloadIcon from "./lib/DownloadIcon";
-import formatter from "./lib/descriptionFormat";
-import { format } from "d3-format";
+import ModalIcon from "./lib/ModalIcon";
+import ReactModal from "react-modal";
+import { group } from "d3-array";
 
-const Description = row => {
-  return (
-    <div className="dv-Dashboard__description">
-      <a
-        className="dv-Dashboard__download"
-        href={row.original["download"] || "#"}
-      >
-        <DownloadIcon />
-        Download
-      </a>
-      <h3>Top findings directly from the report</h3>
-      <div>
-        {formatter(row.original["Top findings directly from the report"])}
-      </div>
-      {Tags(row.original["Tags"])}
-    </div>
-  );
-};
-
-const Tags = text => {
-  const tags = text.split(", ");
-  return (
-    <div className="dv-Dashboard__tags">
-      <span className="dv-Dashboard__tag-title">Tags:</span>
-      {tags.map(tag => (
-        <span className="dv-Dashboard__tag">
-          {tag.charAt(0).toUpperCase() + tag.slice(1)}
-        </span>
-      ))}
-    </div>
-  );
-};
-
-const columns = [
-  {
-    Header: "",
-    expander: true,
-    Expander: ({ isExpanded, ...rest }) => (
-      <div className={`icon-plus ${isExpanded ? " x" : ""}`}>
-        <div />
-        <div />
-      </div>
-    ),
-    accessor: "Top findings directly from the report",
-    className: "dv-Dashboard__icon"
-  },
-  {
-    Header: "Study Title",
-    accessor: "Study Title",
-    minWidth: 250,
-    sortable: false,
-    headerClassName: "not-sortable"
-  },
-  {
-    Header: "Year",
-    accessor: "Year"
-  },
-  {
-    Header: "Organization",
-    accessor: "Organization",
-    minWidth: 200,
-    sortable: false,
-    headerClassName: "not-sortable"
-  },
-  {
-    Header: "Sample size",
-    accessor: "sample_number",
-    sortMethod: (a, b, desc) => {
-      return +b - +a;
-    },
-    Cell: ({ value }) => (value ? format(",")(value) : null),
-    minWidth: 120
-  },
-  {
-    Header: "Sample demographics",
-    accessor: "Sample demographics",
-    sortable: false,
-    headerClassName: "not-sortable",
-    minWidth: 350
+function filter(num, str) {
+  switch (str) {
+    case "<1000":
+      return num < 1000;
+    case "1000 - 10000":
+      return num >= 1000 && num <= 10000;
+    case "10000 - 100000":
+      return num >= 10000 && num <= 100000;
+    case ">100000":
+      return num > 100000;
   }
-];
+}
 
 export default class Dashboard extends React.Component {
   constructor(props) {
     super(props);
+    ReactModal.setAppElement("body");
     this.state = {
-      size: {
-        one: true,
-        two: true,
-        three: true
-      },
-      demographics: {
-        "us-adults": true,
-        "college-students": true,
-        administrators: true,
-        faculty: true
-      },
-      tags: this.props.data.reduce((acc, cur) => {
-        const tags = cur["Tags"].split(", ");
-        tags.forEach(tag => {
-          if (!acc[tag]) {
-            acc[tag] = true;
-          }
-        });
-        return acc;
-      }, {})
+      showModal: false
     };
+    Object.keys(this.props.filters[0]).forEach(name => {
+      this.state[name] = this.props.filters.reduce((acc, cur) => {
+        if (cur[name]) {
+          acc[cur[name]] = true;
+        }
+        return acc;
+      }, {});
+    });
+    this.columns = [
+      {
+        Header: "",
+        accessor: "id",
+        className: "dv-Dashboard__icon",
+        Cell: ({ value }) => (
+          <button
+            onClick={e => this.handleOpenModal(value)}
+            className="dv-Dashboard__modal-trigger"
+          >
+            <ModalIcon />
+          </button>
+        )
+      },
+      ...Object.keys(this.props.tableData[0])
+        .filter(d => d !== "id" && d !== "Link")
+        .map(d =>
+          d === "Project"
+            ? {
+                Header: d,
+                accessor: d,
+                minWidth: 150,
+                Cell: row => {
+                  const link = row.original["Link"];
+                  if (link) {
+                    return (
+                      <a target="_blank" rel="noopener noreferrer" href={link}>
+                        {row.value}
+                      </a>
+                    );
+                  } else {
+                    return row.value;
+                  }
+                }
+              }
+            : {
+                Header: d,
+                accessor: d,
+                minWidth: 150
+              }
+        )
+    ];
+    this.dataMap = group(this.props.popupData, d => d.id);
+    this.handleOpenModal = this.handleOpenModal.bind(this);
+    this.handleCloseModal = this.handleCloseModal.bind(this);
     this.onFilterChange = this.onFilterChange.bind(this);
   }
 
@@ -120,66 +86,62 @@ export default class Dashboard extends React.Component {
     console.log(name, filter);
     this.setState({ [name]: filter });
   };
+
+  handleOpenModal = id => {
+    this.setState({ showModal: true, modalContents: this.dataMap.get(id)[0] });
+  };
+  handleCloseModal = id => {
+    this.setState({ showModal: false });
+  };
+
   render() {
-    const { size, demographics, tags } = this.state;
-    let _data = this.props.data;
-    _data = this.props.data
-      .filter(val => {
-        const num = +val["sample_number"];
-        if (size.one && size.two && size.three) {
-          return true;
-        }
-        if (size.one && size.two) {
-          return num <= 5000;
-        }
-        if (size.two && size.three) {
-          return num >= 1000;
-        }
-        if (size.one && size.three) {
-          return num <= 1000 || num >= 5000;
-        }
-        if (size.one) {
-          return num <= 1000;
-        }
-        if (size.two) {
-          return num >= 1000 && num <= 5000;
-        }
-        if (size.three) {
-          return num >= 5000;
-        }
-        return false;
-      })
-      .filter(val => {
-        const demo = val["demographics_key"];
-        if (demographics[demo]) {
-          return true;
-        } else {
-          return false;
-        }
-      })
-      .filter(val => {
-        const tagString = val["Tags"];
-        if (
-          Object.keys(tags).some(key => tags[key] && tagString.includes(key))
-        ) {
-          return true;
-        } else {
-          return false;
-        }
-      });
+    const regionFilters = this.state["Operating Region"];
+    const scaleFilters = this.state["Current Scale (People Served)"];
+    const sdgFilters = this.state["SDG"];
+    const { showModal, modalContents } = this.state;
+    let data = this.props.tableData.filter(val => {
+      const num = +val["sample_number"];
+      if (!num) {
+        return true;
+      }
+      const activeScaleFilters = Object.keys(scaleFilters).filter(
+        f => scaleFilters[f]
+      );
+      return activeScaleFilters.every(f => filter(num, f));
+    });
     return (
       <ChartContainer>
         <div className="dv-Dashboard__content">
-          <Sidebar
-            onFilterChange={this.onFilterChange}
-            tags={Object.keys(tags)}
-          />
           <DataTableWithSearch
-            columns={columns}
-            data={_data}
-            SubComponent={Description}
-            defaultPageSize={10}
+            columns={this.columns}
+            data={data}
+            defaultPageSize={20}
           />
+          <ReactModal
+            isOpen={showModal}
+            contentLabel="Read More"
+            htmlOpenClassName="ReactModal__Html--open"
+            onRequestClose={this.handleCloseModal}
+            className="dv-Modal"
+            overlayClassName="dv-Modal__overlay"
+          >
+            <div className="dv-Modal__contents">
+              {modalContents &&
+                Object.keys(modalContents).map(
+                  key =>
+                    key !== "id" &&
+                    modalContents[key] && (
+                      <div className="dv-Modal__item">
+                        <span className="dv-Modal__key">{key}</span>
+                        <span className="dv-Modal__value">
+                          {modalContents[key]}
+                        </span>
+                      </div>
+                    )
+                )}
+            </div>
+            <button onClick={this.handleCloseModal}>Close Modal</button>
+          </ReactModal>
         </div>
       </ChartContainer>
     );

@@ -1,5 +1,5 @@
 {
-  "name": "epp_polling_dashboard",
+  "name": "bta_impact_ledger",
   "version": "1.0.0",
   "description": "",
   "main": "src/index.js",
@@ -17,9 +17,11 @@
     "@newamerica/data-table": "0.0.7",
     "@newamerica/meta": "0.0.4",
     "@newamerica/scss": "0.0.2",
+    "d3-array": "^2.0.3",
     "d3-format": "^1.3.2",
     "react": "^16.3.0",
     "react-dom": "^16.3.0",
+    "react-modal": "^3.8.1",
     "react-table": "6.5.3"
   },
   "devDependencies": {
