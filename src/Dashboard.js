@@ -2,22 +2,9 @@ import React from "react";
 import { ChartContainer, Title } from "@newamerica/meta";
 import Sidebar from "./Sidebar";
 import { DataTableWithSearch } from "@newamerica/data-table";
-import ModalIcon from "./lib/ModalIcon";
+import { ModalIcon, X } from "./lib/Icons";
 import ReactModal from "react-modal";
 import { group } from "d3-array";
-
-function filter(num, str) {
-  switch (str) {
-    case "<1000":
-      return num < 1000;
-    case "1000 - 10000":
-      return num >= 1000 && num <= 10000;
-    case "10000 - 100000":
-      return num >= 10000 && num <= 100000;
-    case ">100000":
-      return num > 100000;
-  }
-}
 
 export default class Dashboard extends React.Component {
   constructor(props) {
@@ -39,10 +26,13 @@ export default class Dashboard extends React.Component {
         Header: "",
         accessor: "id",
         className: "dv-Dashboard__icon",
+        headerClassName: "not-sortable",
+        sortable: false,
+        minWidth: 50,
         Cell: ({ value }) => (
           <button
             onClick={e => this.handleOpenModal(value)}
-            className="dv-Dashboard__modal-trigger"
+            className="dv-Dashboard__button"
           >
             <ModalIcon />
           </button>
@@ -83,7 +73,6 @@ export default class Dashboard extends React.Component {
   }
 
   onFilterChange = (name, filter) => {
-    console.log(name, filter);
     this.setState({ [name]: filter });
   };
 
@@ -99,23 +88,55 @@ export default class Dashboard extends React.Component {
     const scaleFilters = this.state["Current Scale (People Served)"];
     const sdgFilters = this.state["SDG"];
     const { showModal, modalContents } = this.state;
-    let data = this.props.tableData.filter(val => {
-      const num = +val["sample_number"];
-      if (!num) {
-        return true;
-      }
-      const activeScaleFilters = Object.keys(scaleFilters).filter(
-        f => scaleFilters[f]
-      );
-      return activeScaleFilters.every(f => filter(num, f));
-    });
+    let data = this.props.tableData
+      .filter(val => {
+        const scale = val["Current Scale (People Served)"];
+        if (!scale || scaleFilters[scale]) {
+          return true;
+        } else {
+          return false;
+        }
+      })
+      .filter(val => {
+        const region = val["Operating Region"];
+        if (
+          !region ||
+          Object.keys(regionFilters).some(
+            key => regionFilters[key] && region.includes(key)
+          )
+        ) {
+          return true;
+        } else {
+          return false;
+        }
+      })
+      .filter(val => {
+        const sdg = val["SDG"];
+        if (
+          !sdg ||
+          Object.keys(sdgFilters).some(
+            key => sdgFilters[key] && sdg.includes(key)
+          )
+        ) {
+          return true;
+        } else {
+          return false;
+        }
+      });
     return (
       <ChartContainer>
         <div className="dv-Dashboard__content">
+          <Title style={{ padding: "0" }}>This is a title</Title>
+          <Sidebar
+            onFilterChange={this.onFilterChange}
+            scaleFilters={scaleFilters}
+            regionFilters={regionFilters}
+            sdgFilters={sdgFilters}
+          />
           <DataTableWithSearch
             columns={this.columns}
             data={data}
-            defaultPageSize={20}
+            defaultPageSize={10}
           />
           <ReactModal
             isOpen={showModal}
@@ -140,7 +161,13 @@ export default class Dashboard extends React.Component {
                     )
                 )}
             </div>
-            <button onClick={this.handleCloseModal}>Close Modal</button>
+            <button
+              onClick={this.handleCloseModal}
+              className="dv-Dashboard__button dv-Dashboard__button-close"
+              aria-label="Close modal"
+            >
+              <X />
+            </button>
           </ReactModal>
         </div>
       </ChartContainer>

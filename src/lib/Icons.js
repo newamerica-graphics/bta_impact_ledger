@@ -1,4 +1,9 @@
-import React from "React";
+const X = () => (
+  <div className="dv-X">
+    <div />
+    <div />
+  </div>
+);
 
 const ModalIcon = () => (
   <svg
@@ -18,4 +23,4 @@ const ModalIcon = () => (
   </svg>
 );
 
-export default ModalIcon;
+export { ModalIcon, X };
