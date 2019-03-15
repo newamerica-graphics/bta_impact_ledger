@@ -203,6 +203,7 @@
   bottom: 30px;
   left: 0;
   z-index: 600;
+  overflow: auto;
   margin-right: auto;
   margin-left: auto;
   max-width: 1200px;
@@ -223,7 +224,6 @@
 
 .dv-Modal__contents {
   display: flex;
-  overflow: auto;
   flex-wrap: wrap;
   padding: 2rem;
 }

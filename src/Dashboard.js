@@ -59,6 +59,12 @@ export default class Dashboard extends React.Component {
                   }
                 }
               }
+            : d === "Description"
+            ? {
+                Header: d,
+                accessor: d,
+                minWidth: 245
+              }
             : {
                 Header: d,
                 accessor: d,
