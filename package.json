@@ -13,7 +13,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@newamerica/components": "0.0.4",
+    "@newamerica/components": "0.0.6",
     "@newamerica/data-table": "0.0.7",
     "@newamerica/meta": "0.0.4",
     "@newamerica/scss": "0.0.2",

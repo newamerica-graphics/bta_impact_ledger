@@ -132,7 +132,6 @@ export default class Dashboard extends React.Component {
     return (
       <ChartContainer>
         <div className="dv-Dashboard__content">
-          <Title style={{ padding: "0" }}>This is a title</Title>
           <Sidebar
             onFilterChange={this.onFilterChange}
             scaleFilters={scaleFilters}

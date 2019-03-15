@@ -61,6 +61,7 @@ export default class Sidebar extends React.Component {
                   filterState
                 )
               }
+              selectButtons={true}
             />
             <CheckboxGroup
               title="Current Scale (People Served)"
@@ -73,6 +74,7 @@ export default class Sidebar extends React.Component {
                   filterState
                 )
               }
+              selectButtons={true}
             />
             <CheckboxGroup
               title="SDG"
@@ -81,6 +83,7 @@ export default class Sidebar extends React.Component {
               onChange={filterState =>
                 this.handleChange(this.sdgMap, "SDG", filterState)
               }
+              selectButtons={true}
             />
           </div>
         </div>
