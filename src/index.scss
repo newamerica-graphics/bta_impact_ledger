@@ -163,7 +163,7 @@
   .rt-thead .rt-th:first-child {
     border-right: none;
   }
-  .rt-tr.-even+.dv-Dashboard__description {
+  .rt-tr.-even + .dv-Dashboard__description {
     background-color: #fff !important;
   }
   .not-sortable {
@@ -219,7 +219,7 @@
   bottom: 0;
   left: 0;
   z-index: 600;
-  background-color: rgba(51, 51, 51, .3);
+  background-color: rgba(51, 51, 51, 0.3);
 }
 
 .dv-Modal__contents {
@@ -251,18 +251,18 @@
   width: 20px;
   height: 20px;
   transform: rotate(45deg);
-  &>* {
+  & > * {
     position: absolute;
     display: block;
     width: 100%;
     height: 1px;
     background: #333;
   }
-  &>*:first-child {
+  & > *:first-child {
     top: 50%;
     transform: translateY(-50%);
   }
-  &>*:nth-child(2) {
+  & > *:nth-child(2) {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%) rotate(90deg);
@@ -273,4 +273,21 @@
   position: absolute;
   top: 1rem;
   right: 1rem;
+}
+
+div#download_file {
+  width: 100%;
+  text-align: center;
+}
+div#download_file span {
+  display: inline-block;
+  cursor: pointer;
+  padding: 10px;
+  margin: 10px;
+  border: 1px solid #333;
+  transition: all 0.3s ease;
+}
+div#download_file span:hover {
+  background-color: rgb(240, 240, 240);
+  border: 1px solid #22c8a3;
 }

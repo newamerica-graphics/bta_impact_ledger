@@ -8,12 +8,20 @@ let data = null;
 
 const settings = {
   dashboard: el => {
+    // console.log(create_csv(data.table));
     ReactDOM.render(
-      <Dashboard
-        tableData={data.table}
-        popupData={data.popup}
-        filters={data.filters}
-      />,
+      [
+        <Dashboard
+          tableData={data.table}
+          popupData={data.popup}
+          filters={data.filters}
+        />,
+        <div id="download_file">
+          <span onClick={() => create_csv(data.table)}>
+            Download Data File CSV
+          </span>
+        </div>
+      ],
       el
     );
   }
@@ -37,3 +45,24 @@ window.renderDataViz = function(el) {
     queue.push(() => chart(el));
   }
 };
+
+function create_csv(input) {
+  let keys = Object.keys(input[0]);
+  let csv = "";
+  csv += keys.join(",") + "\r\n";
+  console.log(keys);
+  input.forEach(function(rowObj) {
+    let row = Object.values(rowObj)
+      .map(s => {
+        return s ? s.replace(/,/g, ";").replace(/\n/, "") : s;
+      })
+      .join(",");
+    csv += row + "\r\n";
+  });
+  let filename = "impact_ledger_data.csv";
+  let blob = new Blob([csv], { type: "text/csv" });
+  let download_link = document.createElement("a");
+  download_link.download = `${filename}`;
+  download_link.href = URL.createObjectURL(blob);
+  download_link.click();
+}
