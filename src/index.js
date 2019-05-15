@@ -64,5 +64,6 @@ function create_csv(input) {
   let download_link = document.createElement("a");
   download_link.download = `${filename}`;
   download_link.href = URL.createObjectURL(blob);
+  document.body.appendChild(download_link);
   download_link.click();
 }
