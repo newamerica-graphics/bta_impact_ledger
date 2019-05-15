@@ -50,11 +50,11 @@ function create_csv(input) {
   let keys = Object.keys(input[0]);
   let csv = "";
   csv += keys.join(",") + "\r\n";
-  console.log(keys);
+  // console.log(keys);
   input.forEach(function(rowObj) {
     let row = Object.values(rowObj)
       .map(s => {
-        return s ? s.replace(/,/g, ";").replace(/\n/, "") : s;
+        return s ? s.replace(/,/g, ";").replace(/\n/g, " ") : s;
       })
       .join(",");
     csv += row + "\r\n";
