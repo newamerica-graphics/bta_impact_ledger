@@ -236,8 +236,24 @@
 }
 
 .dv-Modal__key {
-  padding-bottom: 0.5rem;
   font-weight: bold;
+  font-size: inherit;
+  line-height: inherit;
+  margin: 0 0 0.5rem;
+}
+
+.dv-Modal__value {
+  P, li {
+    font-size: inherit;
+    font-family: inherit;
+    line-height: inherit;
+  }
+  > :first-child {
+    margin-top: 0;
+  }
+  > :last-child {
+    margin-bottom: 0;
+  }
 }
 
 .ReactModal__Body--open,

@@ -3,6 +3,7 @@ import { ChartContainer, Title } from "@newamerica/meta";
 import Sidebar from "./Sidebar";
 import { DataTableWithSearch } from "@newamerica/data-table";
 import { ModalIcon, X } from "./lib/Icons";
+import ReactMarkdown from "react-markdown";
 import ReactModal from "react-modal";
 import { group } from "d3-array";
 
@@ -158,10 +159,11 @@ export default class Dashboard extends React.Component {
                     key !== "id" &&
                     modalContents[key] && (
                       <div className="dv-Modal__item">
-                        <span className="dv-Modal__key">{key}</span>
-                        <span className="dv-Modal__value">
-                          {modalContents[key]}
-                        </span>
+                        <h3 className="dv-Modal__key">{key}</h3>
+                        <ReactMarkdown
+                          source={modalContents[key]}
+                          className="dv-Modal__value"
+                        />
                       </div>
                     )
                 )}
