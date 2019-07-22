@@ -40,7 +40,7 @@ export default class Dashboard extends React.Component {
         )
       },
       ...Object.keys(this.props.tableData[0])
-        .filter(d => d !== "id" && d !== "Link")
+        .filter(d => d !== "id")
         .map(d =>
           d === "Project"
             ? {
@@ -48,16 +48,7 @@ export default class Dashboard extends React.Component {
                 accessor: d,
                 minWidth: 150,
                 Cell: row => {
-                  const link = row.original["Link"];
-                  if (link) {
-                    return (
-                      <a target="_blank" rel="noopener noreferrer" href={link}>
-                        {row.value}
-                      </a>
-                    );
-                  } else {
-                    return row.value;
-                  }
+                  return row.value;
                 }
               }
             : d === "Description"
