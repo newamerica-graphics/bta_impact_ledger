@@ -27,7 +27,7 @@ const settings = {
   }
 };
 
-fetch("https://na-data-projects.s3.amazonaws.com/data/bta/impact_ledger.json")
+fetch("https://na-data-sheetsstorm.s3.us-west-2.amazonaws.com/prod/bta/impact_ledger.json")
   .then(response => response.json())
   .then(_data => {
     data = _data;
@@ -59,7 +59,7 @@ function create_csv(input) {
       .join(",");
     csv += row + "\r\n";
   });
-  let filename = "impact_ledger_data.csv";
+  let filename = "impact_ledger_data_v2.csv";
   let blob = new Blob([csv], { type: "text/csv" });
   let download_link = document.createElement("a");
   download_link.download = `${filename}`;
