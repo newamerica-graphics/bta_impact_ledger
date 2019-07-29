@@ -51,16 +51,16 @@ export default class Dashboard extends React.Component {
                   return row.value;
                 }
               }
-            : d === "Description"
-            ? {
-                Header: d,
-                accessor: d,
-                minWidth: 245
-              }
-            : {
-                Header: d,
-                accessor: d,
-                minWidth: 150
+        : {
+          Header: d,
+          accessor: d,
+                minWidth: d === "Description" ? 245 : 150,
+                Cell: row => (
+                  <ReactMarkdown
+                    source={row.value}
+                    className="dv-ReactMarkdown"
+                  />
+                )
               }
         )
     ];
@@ -153,7 +153,7 @@ export default class Dashboard extends React.Component {
                         <h3 className="dv-Modal__key">{key}</h3>
                         <ReactMarkdown
                           source={modalContents[key]}
-                          className="dv-Modal__value"
+                          className="dv-ReactMarkdown"
                         />
                       </div>
                     )
