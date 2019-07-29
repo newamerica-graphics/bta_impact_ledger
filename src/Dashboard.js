@@ -2,7 +2,7 @@ import React from "react";
 import { ChartContainer, Title } from "@newamerica/meta";
 import Sidebar from "./Sidebar";
 import { DataTableWithSearch } from "@newamerica/data-table";
-import { ModalIcon, X } from "./lib/Icons";
+import { X } from "./lib/Icons";
 import ReactMarkdown from "react-markdown";
 import ReactModal from "react-modal";
 import { group } from "d3-array";
@@ -23,45 +23,47 @@ export default class Dashboard extends React.Component {
       }, {});
     });
     this.columns = [
-      {
-        Header: "",
-        accessor: "id",
-        className: "dv-Dashboard__icon",
-        headerClassName: "not-sortable",
-        sortable: false,
-        minWidth: 50,
-        Cell: ({ value }) => (
-          <button
-            onClick={e => this.handleOpenModal(value)}
-            className="dv-Dashboard__button"
-          >
-            <ModalIcon />
-          </button>
-        )
-      },
       ...Object.keys(this.props.tableData[0])
         .filter(d => d !== "id")
         .map(d =>
           d === "Project"
-            ? {
-                Header: d,
-                accessor: d,
-                minWidth: 150,
-                Cell: row => {
-                  return row.value;
-                }
+          ? {
+            Header: d,
+            accessor: d,
+            minWidth: 180,
+            Cell: row => {
+              const id = row.original["id"];
+              if (id) {
+                return (
+                  <div>
+                    <ReactMarkdown
+                      source={row.value}
+                      className="dv-ReactMarkdown"
+                    />
+                    <button
+                      onClick={e => this.handleOpenModal(id)}
+                      className="dv-Dashboard__button dv-Dashboard__button--open"
+                    >
+                      Read more
+                    </button>
+                  </div>
+                );
+              } else {
+                return row.value;
               }
-        : {
-          Header: d,
-          accessor: d,
-                minWidth: d === "Description" ? 245 : 150,
-                Cell: row => (
-                  <ReactMarkdown
-                    source={row.value}
-                    className="dv-ReactMarkdown"
-                  />
-                )
-              }
+            }
+          }
+          : {
+            Header: d,
+            accessor: d,
+            minWidth: d === "Description" ? 245 : 150,
+            Cell: row => (
+              <ReactMarkdown
+                source={row.value}
+                className="dv-ReactMarkdown"
+              />
+            )
+          }
         )
     ];
     this.dataMap = group(this.props.popupData, d => d.id);

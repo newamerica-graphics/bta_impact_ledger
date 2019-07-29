@@ -191,9 +191,23 @@
   border: none;
   background: transparent;
   cursor: pointer;
+  transition: color 200ms, border 200ms;
 
   -webkit-appearance: none;
   -moz-appearance: none;
+
+  &--open {
+    margin-top: 1em;
+    line-height: 1;
+    height: auto;
+    padding: 7px 6px 5px;
+    border: 1px solid black;
+
+    &:hover, &:focus, &:active {
+      color: #22c8a3;
+      border: 1px solid #22c8a3;
+    }
+  }
 }
 
 .dv-ReactMarkdown {
