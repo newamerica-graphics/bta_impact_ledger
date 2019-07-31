@@ -12,7 +12,8 @@ export default class Dashboard extends React.Component {
     super(props);
     ReactModal.setAppElement("body");
     this.state = {
-      showModal: false
+      showModal: false,
+      expandSidebar: false
     };
     Object.keys(this.props.filters[0]).forEach(name => {
       this.state[name] = this.props.filters.reduce((acc, cur) => {
@@ -69,11 +70,17 @@ export default class Dashboard extends React.Component {
     this.dataMap = group(this.props.popupData, d => d.id);
     this.handleOpenModal = this.handleOpenModal.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
+    this.handleSidebarExpand = this.handleSidebarExpand.bind(this);
     this.onFilterChange = this.onFilterChange.bind(this);
   }
 
   onFilterChange = (name, filter) => {
     this.setState({ [name]: filter });
+  };
+
+  handleSidebarExpand = (e) => {
+    const { expandSidebar } = this.state;
+    this.setState({ expandSidebar: !expandSidebar });
   };
 
   handleOpenModal = id => {
@@ -87,7 +94,7 @@ export default class Dashboard extends React.Component {
     const regionFilters = this.state["Operating Region"];
     const scaleFilters = this.state["Current Scale (People Served)"];
     const sdgFilters = this.state["SDG"];
-    const { showModal, modalContents } = this.state;
+    const { showModal, modalContents, expandSidebar } = this.state;
     let data = this.props.tableData
       .filter(val => {
         const scale = val["Current Scale (People Served)"];
@@ -131,13 +138,21 @@ export default class Dashboard extends React.Component {
         </div>
       </ChartContainer>
       <ChartContainer>
-          <Sidebar
-            onFilterChange={this.onFilterChange}
-            scaleFilters={scaleFilters}
-            regionFilters={regionFilters}
-            sdgFilters={sdgFilters}
-          />
+        <Sidebar
+          onFilterChange={this.onFilterChange}
+          scaleFilters={scaleFilters}
+          regionFilters={regionFilters}
+          sdgFilters={sdgFilters}
+          expandSidebar={expandSidebar}
+          onSidebarExpand={this.handleSidebarExpand}
+        />
         <div className="dv-Dashboard__content dv-Dashboard__content--has-filters">
+          <button
+            className="dv-Dashboard__button dv-Dashboard__button--toggle-filters"
+            onClick={this.handleSidebarExpand}
+          >
+            Filter
+          </button>
           <DataTableWithSearch
             columns={this.columns}
             data={data}

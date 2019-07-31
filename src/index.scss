@@ -76,7 +76,7 @@ $sidebar__width--open: 300px + $rem-in-px; // 300px + 1rem
 
     &:hover, &:focus, &:active {
       color: #22c8a3;
-  }
+    }
   
   }
   &__interior {
@@ -279,6 +279,15 @@ $sidebar__width--open: 300px + $rem-in-px; // 300px + 1rem
     margin: 0;
     padding: 0.5rem 0.5rem 1.7rem;
     border: none;
+  }
+
+  &--toggle-filters {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 36px;
+    margin-top: 1rem;
+    padding: 0 1rem;
   }
 }
 
