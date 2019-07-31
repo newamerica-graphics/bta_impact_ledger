@@ -40,6 +40,7 @@ export default class Dashboard extends React.Component {
                     <ReactMarkdown
                       source={row.value}
                       className="dv-ReactMarkdown"
+                      linkTarget="_blank"
                     />
                     <button
                       onClick={e => this.handleOpenModal(id)}
@@ -62,6 +63,7 @@ export default class Dashboard extends React.Component {
               <ReactMarkdown
                 source={row.value}
                 className="dv-ReactMarkdown"
+                linkTarget="_blank"
               />
             )
           }
@@ -184,6 +186,7 @@ export default class Dashboard extends React.Component {
                         <ReactMarkdown
                           source={modalContents[key]}
                           className="dv-ReactMarkdown"
+                          linkTarget="_blank"
                         />
                       </div>
                     )
