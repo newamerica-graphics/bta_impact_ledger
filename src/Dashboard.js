@@ -148,12 +148,12 @@ export default class Dashboard extends React.Component {
           expandSidebar={expandSidebar}
           onSidebarExpand={this.handleSidebarExpand}
         />
-        <div className="dv-Dashboard__content dv-Dashboard__content--has-filters">
+        <div className="dv-Dashboard__content">
           <button
             className="dv-Dashboard__button dv-Dashboard__button--toggle-filters"
             onClick={this.handleSidebarExpand}
           >
-            Filter
+            Filter results
           </button>
           <DataTableWithSearch
             columns={this.columns}

@@ -1,5 +1,6 @@
 import React from "react";
 import { CheckboxGroup } from "@newamerica/components";
+import { X } from "./lib/Icons";
 import slugify from "./lib/slugify";
 import { group } from "d3-array";
 
@@ -44,11 +45,11 @@ export default class Sidebar extends React.Component {
     const expandSidebar = this.props.expandSidebar;
     return (
       <div className={`dv-Sidebar${expandSidebar ? " expanded" : ""}`}>
-        <button className="dv-Sidebar__button" onClick={this.handleSidebarExpand}>
-          Filters
-        </button>
         <div className="dv-Sidebar__interior">
-          <div>
+            <button className="dv-Sidebar__button" onClick={this.handleSidebarExpand}>
+              <X/>
+            </button>
+            <h2>Filters</h2>
             <CheckboxGroup
               title="Operating Region"
               style={{ paddingBottom: "1rem", borderBottom: "solid 1px #ddd" }}
@@ -84,7 +85,6 @@ export default class Sidebar extends React.Component {
               }
               selectButtons={true}
             />
-          </div>
         </div>
       </div>
     );
