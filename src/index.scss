@@ -1,6 +1,14 @@
 @import "~@newamerica/data-table/dist/styles.css";
 @import "~@newamerica/components/dist/styles.css";
 @import "~@newamerica/meta/dist/styles.css";
+
+$rem-in-px: 16px;
+
+$dashboard__width: 1200px;
+// sidebar widths include padding
+$sidebar__width--closed: 4 * $rem-in-px; // 4rem, incl. 1rem of padding
+$sidebar__width--open: 300px + $rem-in-px; // 300px + 1rem
+
 @mixin transform($args) {
   -webkit-transform: $args;
   -moz-transform: $args;
@@ -22,12 +30,18 @@
 }
 
 .dv-ChartContainer {
-  // position: static;
+  // this is a little hacky, sorry
+  margin-bottom: -1rem;
+
+  & + .dv-ChartContainer {
+    padding-top: 0;
+    margin-bottom: 0;
+  }
 }
 
 .dv-Sidebar {
   position: absolute;
-  top: 2.85rem;
+  top: 1rem;
   left: 0;
   z-index: 100;
   overflow: hidden;
@@ -38,6 +52,7 @@
   transition: width 0.4s ease;
 
   will-change: width;
+
   &__button {
     position: absolute;
     top: 2rem;
@@ -68,6 +83,29 @@
     height: 100%;
     opacity: 0;
     transition: opacity 0.4s ease;
+  }
+
+  @media screen and (min-width: $dashboard__width + $sidebar__width--open) {
+    width: 300px;
+
+    // hackily cover up the button when the sidebar is always-open
+    &::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 3rem;
+      z-index: 2;
+    }
+
+    .dv-Sidebar__interior {
+      visibility: visible;
+      opacity: 1;
+    }
+    .dv-Sidebar__button {
+      left: calc(100% - 1.5rem);
+    }  
   }
 }
 
@@ -123,9 +161,30 @@
 .dv-Dashboard__content {
   margin-right: auto;
   margin-left: auto;
-  max-width: 1200px;
-  @media (max-width: 1310px) {
-    padding-left: 60px;
+  max-width: $dashboard__width;
+  
+  &--has-filters {
+    max-width: $dashboard__width + $sidebar__width--closed;
+    margin-left: 0;
+    padding-left: $sidebar__width--closed;
+  
+    @media (min-width: $dashboard__width + (2 * $sidebar__width--closed)) {
+      max-width: $dashboard__width;
+      margin-left: auto;
+      padding-left: 0;
+    }
+
+    @media (min-width: $dashboard__width + $sidebar__width--open) {
+      max-width: $dashboard__width + $sidebar__width--open;
+      margin-left: 0;
+      padding-left: $sidebar__width--open;
+    }
+
+    @media (min-width: $dashboard__width + (2 * $sidebar__width--open)) {
+      max-width: $dashboard__width;
+      margin-left: auto;
+      padding-left: 0;
+  }
   }
 }
 

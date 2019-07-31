@@ -124,8 +124,14 @@ export default class Dashboard extends React.Component {
         }
       });
     return (
+      <div>
       <ChartContainer>
         <div className="dv-Dashboard__content">
+          <h1>Blockchain Impact Ledger</h1>
+        </div>
+      </ChartContainer>
+      <ChartContainer>
+        <div className="dv-Dashboard__content dv-Dashboard__content--has-filters">
           <Sidebar
             onFilterChange={this.onFilterChange}
             scaleFilters={scaleFilters}
@@ -171,6 +177,7 @@ export default class Dashboard extends React.Component {
           </ReactModal>
         </div>
       </ChartContainer>
+      </div>
     );
   }
 }
