@@ -25,7 +25,7 @@ export default class Sidebar extends React.Component {
     this.regionMap = group(this.regionFilters, d => d.id);
     this.scaleMap = group(this.scaleFilters, d => d.id);
     this.sdgMap = group(this.sdgFilters, d => d.id);
-    this.handleChange = this.handleChange.bind(this);
+    this.handleFilterChange = this.handleFilterChange.bind(this);
   }
 
   expandSidebar = e => {
@@ -33,7 +33,7 @@ export default class Sidebar extends React.Component {
     this.setState({ expanded: !expanded });
   };
 
-  handleChange = (map, id, filterState) => {
+  handleFilterChange = (map, id, filterState) => {
     const obj = {};
     Object.keys(filterState).forEach(key => {
       obj[map.get(key)[0].label] = filterState[key];
@@ -55,7 +55,7 @@ export default class Sidebar extends React.Component {
               style={{ paddingBottom: "1rem", borderBottom: "solid 1px #ddd" }}
               options={this.regionFilters}
               onChange={filterState =>
-                this.handleChange(
+                this.handleFilterChange(
                   this.regionMap,
                   "Operating Region",
                   filterState
@@ -68,7 +68,7 @@ export default class Sidebar extends React.Component {
               style={{ padding: "1rem 0", borderBottom: "solid 1px #ddd" }}
               options={this.scaleFilters}
               onChange={filterState =>
-                this.handleChange(
+                this.handleFilterChange(
                   this.scaleMap,
                   "Current Scale (People Served)",
                   filterState
@@ -81,7 +81,7 @@ export default class Sidebar extends React.Component {
               style={{ paddingTop: "1rem" }}
               options={this.sdgFilters}
               onChange={filterState =>
-                this.handleChange(this.sdgMap, "SDG", filterState)
+                this.handleFilterChange(this.sdgMap, "SDG", filterState)
               }
               selectButtons={true}
             />
