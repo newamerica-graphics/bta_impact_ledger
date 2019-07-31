@@ -42,7 +42,7 @@ export default class Dashboard extends React.Component {
                     />
                     <button
                       onClick={e => this.handleOpenModal(id)}
-                      className="dv-Dashboard__button dv-Dashboard__button--open"
+                      className="dv-Dashboard__button dv-Dashboard__button--open-modal"
                     >
                       Read more
                     </button>
@@ -131,13 +131,13 @@ export default class Dashboard extends React.Component {
         </div>
       </ChartContainer>
       <ChartContainer>
-        <div className="dv-Dashboard__content dv-Dashboard__content--has-filters">
           <Sidebar
             onFilterChange={this.onFilterChange}
             scaleFilters={scaleFilters}
             regionFilters={regionFilters}
             sdgFilters={sdgFilters}
           />
+        <div className="dv-Dashboard__content dv-Dashboard__content--has-filters">
           <DataTableWithSearch
             columns={this.columns}
             data={data}
@@ -151,6 +151,13 @@ export default class Dashboard extends React.Component {
             className="dv-Modal"
             overlayClassName="dv-Modal__overlay"
           >
+            <button
+              onClick={this.handleCloseModal}
+              className="dv-Dashboard__button dv-Dashboard__button--close-modal"
+              aria-label="Close modal"
+            >
+              <X />
+            </button>
             <div className="dv-Modal__contents">
               {modalContents &&
                 Object.keys(modalContents).map(
@@ -167,13 +174,6 @@ export default class Dashboard extends React.Component {
                     )
                 )}
             </div>
-            <button
-              onClick={this.handleCloseModal}
-              className="dv-Dashboard__button dv-Dashboard__button-close"
-              aria-label="Close modal"
-            >
-              <X />
-            </button>
           </ReactModal>
         </div>
       </ChartContainer>

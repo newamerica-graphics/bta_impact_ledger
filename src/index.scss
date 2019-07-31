@@ -67,12 +67,17 @@ $sidebar__width--open: 300px + $rem-in-px; // 300px + 1rem
     font-weight: bold;
     font-size: 14px;
     cursor: pointer;
-    transition: left 0.4s ease;
+    transition: left 0.4s ease, color 200ms ease 50ms;
     transform: rotate(270deg) translateX(-50%);
     transform-origin: left;
 
     -webkit-appearance: none;
     -moz-appearance: none;
+
+    &:hover, &:focus, &:active {
+      color: #22c8a3;
+  }
+  
   }
   &__interior {
     visibility: hidden;
@@ -159,9 +164,10 @@ $sidebar__width--open: 300px + $rem-in-px; // 300px + 1rem
 }
 
 .dv-Dashboard__content {
+  position: relative;
+  max-width: $dashboard__width;
   margin-right: auto;
   margin-left: auto;
-  max-width: $dashboard__width;
   
   &--has-filters {
     max-width: $dashboard__width + $sidebar__width--closed;
@@ -245,9 +251,9 @@ $sidebar__width--open: 300px + $rem-in-px; // 300px + 1rem
 
 .dv-Dashboard__button {
   margin: 0;
-  padding: 0;
+  padding: 7px 6px 6px;
   height: 1rem;
-  border: none;
+  border: 1px solid black;
   background: transparent;
   cursor: pointer;
   transition: color 200ms, border 200ms;
@@ -255,17 +261,24 @@ $sidebar__width--open: 300px + $rem-in-px; // 300px + 1rem
   -webkit-appearance: none;
   -moz-appearance: none;
 
-  &--open {
+  &:hover, &:focus, &:active {
+    color: #22c8a3;
+    border-color: #22c8a3;
+  }
+
+  &--open-modal {
     margin-top: 1em;
     line-height: 1;
     height: auto;
-    padding: 7px 6px 5px;
-    border: 1px solid black;
+  }
 
-    &:hover, &:focus, &:active {
-      color: #22c8a3;
-      border: 1px solid #22c8a3;
-    }
+  &--close-modal {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    margin: 0;
+    padding: 0.5rem 0.5rem 1.7rem;
+    border: none;
   }
 }
 
@@ -293,7 +306,7 @@ $sidebar__width--open: 300px + $rem-in-px; // 300px + 1rem
   overflow: auto;
   margin-right: auto;
   margin-left: auto;
-  max-width: 1200px;
+  max-width: $dashboard__width;
   width: calc(100% - 2rem);
   border-radius: 4px;
   background-color: #fff;
@@ -344,8 +357,13 @@ $sidebar__width--open: 300px + $rem-in-px; // 300px + 1rem
     position: absolute;
     display: block;
     width: 100%;
-    height: 1px;
+    height: 2px;
     background: #333;
+    transition: background-color 200ms;
+
+    .dv-Dashboard__button:hover > & {
+      background: #22c8a3;
+    }
   }
   & > *:first-child {
     top: 50%;
@@ -356,12 +374,6 @@ $sidebar__width--open: 300px + $rem-in-px; // 300px + 1rem
     left: 50%;
     transform: translate(-50%, -50%) rotate(90deg);
   }
-}
-
-.dv-Dashboard__button-close {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
 }
 
 div#download_file {
