@@ -59,7 +59,7 @@ function create_csv(input) {
       .join(",");
     csv += row + "\r\n";
   });
-  let filename = "impact_ledger_data_v2.csv";
+  let filename = "impact_ledger_data.csv";
   let blob = new Blob([csv], { type: "text/csv" });
   let download_link = document.createElement("a");
   download_link.download = `${filename}`;
