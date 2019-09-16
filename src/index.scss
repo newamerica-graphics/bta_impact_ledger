@@ -3,6 +3,7 @@
 @import "~@newamerica/meta/dist/styles.css";
 
 $dashboard__width: 1200px;
+$color: #2ebcb3;
 
 @mixin transform($args) {
   -webkit-transform: $args;
@@ -16,6 +17,10 @@ $dashboard__width: 1200px;
   -moz-transition: $args;
   -o-transition: $args;
   transition: $args;
+}
+
+a {
+  color: $color;
 }
 
 @mixin vertical-center {
@@ -64,7 +69,7 @@ $dashboard__width: 1200px;
     -moz-appearance: none;
 
     &:hover, &:focus, &:active {
-      color: #22c8a3;
+      color: $color;
     }
   
   }
@@ -202,8 +207,8 @@ $dashboard__width: 1200px;
   -moz-appearance: none;
 
   &:hover, &:focus, &:active {
-    color: #22c8a3;
-    border-color: #22c8a3;
+    color: $color;
+    border-color: $color;
   }
 
   &--open-modal {
@@ -313,7 +318,7 @@ $dashboard__width: 1200px;
 
     .dv-Dashboard__button:hover > &,
     .dv-Sidebar__button:hover > & {
-      background: #22c8a3;
+      background: $color;
     }
   }
   & > *:first-child {
@@ -341,5 +346,5 @@ div#download_file span {
 }
 div#download_file span:hover {
   background-color: rgb(240, 240, 240);
-  border: 1px solid #22c8a3;
+  border: 1px solid $color;
 }
