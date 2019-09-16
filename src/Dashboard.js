@@ -179,11 +179,7 @@ export default class Dashboard extends React.Component {
               <div className="dv-Modal__contents">
                 <div className="dv-Modal__header">
                   <h3>
-                    <ReactMarkdown
-                      source={modalContents["Organization"]}
-                      className="dv-ReactMarkdown"
-                      linkTarget="_blank"
-                    />
+                    {modalContents["Organization"]}
                   </h3>
                   <h2>
                     <ReactMarkdown
