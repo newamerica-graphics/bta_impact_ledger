@@ -263,6 +263,7 @@ a {
   margin-right: auto;
   margin-left: auto;
   background-color: #fff;
+  outline: 0;
 
   @media (min-width: $breakpoint) {
     top: 170px;
