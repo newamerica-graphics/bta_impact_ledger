@@ -175,23 +175,57 @@ export default class Dashboard extends React.Component {
             >
               <X />
             </button>
-            <div className="dv-Modal__contents">
-              {modalContents &&
-                Object.keys(modalContents).map(
-                  key =>
-                    key !== "id" &&
-                    modalContents[key] && (
-                      <div className="dv-Modal__item">
-                        <h3 className="dv-Modal__key">{key}</h3>
-                        <ReactMarkdown
-                          source={modalContents[key]}
-                          className="dv-ReactMarkdown"
-                          linkTarget="_blank"
-                        />
-                      </div>
-                    )
-                )}
-            </div>
+            {modalContents &&
+              <div className="dv-Modal__contents">
+                <div className="dv-Modal__header">
+                  <h3>
+                    <ReactMarkdown
+                      source={modalContents["Organization"]}
+                      className="dv-ReactMarkdown"
+                      linkTarget="_blank"
+                    />
+                  </h3>
+                  <h2>
+                    <ReactMarkdown
+                      source={modalContents["Project"]}
+                      className="dv-ReactMarkdown"
+                      linkTarget="_blank"
+                    />
+                  </h2>
+                  <p>
+                    <ReactMarkdown
+                      source={modalContents["Description"]}
+                      className="dv-ReactMarkdown"
+                      linkTarget="_blank"
+                    />
+                  </p>
+
+                  <h3 className="dv-Modal__key">Objective</h3>
+                  <ReactMarkdown
+                    source={modalContents["Objective"]}
+                    className="dv-ReactMarkdown"
+                    linkTarget="_blank"
+                  />
+                </div>
+
+                <div className="dv-Modal__items">
+                  {Object.keys(modalContents).slice(5).map(
+                    key =>
+                      key !== "id" &&
+                      modalContents[key] && (
+                        <div className="dv-Modal__item">
+                          <h3 className="dv-Modal__key">{key}</h3>
+                          <ReactMarkdown
+                            source={modalContents[key]}
+                            className="dv-ReactMarkdown"
+                            linkTarget="_blank"
+                          />
+                        </div>
+                      )
+                  )}
+                </div>
+              </div>
+            }
           </ReactModal>
         </div>
       </ChartContainer>
