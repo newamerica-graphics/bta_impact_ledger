@@ -11,8 +11,10 @@ export default class Dashboard extends React.Component {
   constructor(props) {
     super(props);
     ReactModal.setAppElement("body");
+    this.dataMap = group(this.props.popupData, d => d.id);
     this.state = {
-      showModal: false,
+      showModal: !!window.location.hash,
+      modalContents: window.location.hash ? this.dataMap.get(window.location.hash.slice(1))[0] : null,
       expandSidebar: false
     };
     Object.keys(this.props.filters[0]).forEach(name => {
@@ -69,7 +71,7 @@ export default class Dashboard extends React.Component {
           }
         )
     ];
-    this.dataMap = group(this.props.popupData, d => d.id);
+    
     this.handleOpenModal = this.handleOpenModal.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
     this.handleSidebarExpand = this.handleSidebarExpand.bind(this);
@@ -86,9 +88,11 @@ export default class Dashboard extends React.Component {
   };
 
   handleOpenModal = id => {
-    this.setState({ showModal: true, modalContents: this.dataMap.get(id)[0] });
+    window.location.hash = id;
+    this.setState({ showModal: true, modalContents: this.dataMap.get(window.location.hash.slice(1))[0] });
   };
-  handleCloseModal = id => {
+  handleCloseModal() {
+    window.location.hash = "";
     this.setState({ showModal: false });
   };
 
