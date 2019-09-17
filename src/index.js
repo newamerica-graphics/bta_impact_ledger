@@ -27,7 +27,7 @@ const settings = {
   }
 };
 
-fetch("https://na-data-projects.s3.amazonaws.com/data/bta/impact_ledger.json")
+fetch("https://na-data-sheetsstorm.s3.us-west-2.amazonaws.com/prod/bta/impact_ledger.json")
   .then(response => response.json())
   .then(_data => {
     data = _data;

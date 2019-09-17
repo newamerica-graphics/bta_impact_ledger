@@ -1,6 +1,9 @@
 @import "~@newamerica/data-table/dist/styles.css";
 @import "~@newamerica/components/dist/styles.css";
 @import "~@newamerica/meta/dist/styles.css";
+
+$dashboard__width: 1200px;
+
 @mixin transform($args) {
   -webkit-transform: $args;
   -moz-transform: $args;
@@ -22,64 +25,68 @@
 }
 
 .dv-ChartContainer {
-  // position: static;
+  // this is a little hacky, sorry
+  margin-bottom: -1rem;
+
+  & + .dv-ChartContainer {
+    padding-top: 0;
+    margin-bottom: 0;
+  }
 }
 
 .dv-Sidebar {
   position: absolute;
-  top: 2.85rem;
-  left: 0;
+  top: 0;
+  right: 0;
   z-index: 100;
   overflow: hidden;
-  width: 50px;
-  height: calc(100% - 4.85rem);
+  width: 0;
+  bottom: 5.5rem;
   background-color: #fff;
   box-shadow: 5px 0 40px 0 rgba(0, 0, 0, 0.2);
   transition: width 0.4s ease;
 
   will-change: width;
+
   &__button {
     position: absolute;
-    top: 2rem;
-    left: 50%;
     z-index: 1;
     margin: 0;
+    top: 1rem;
+    right: 1rem;
     padding: 1rem;
     border: none;
     background-color: transparent;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    font-weight: bold;
-    font-size: 14px;
     cursor: pointer;
-    transition: left 0.4s ease;
-    transform: rotate(270deg) translateX(-50%);
-    transform-origin: left;
+    transition: color 200ms;
 
     -webkit-appearance: none;
     -moz-appearance: none;
+
+    &:hover, &:focus, &:active {
+      color: #22c8a3;
+    }
+  
   }
   &__interior {
     visibility: hidden;
-    overflow-y: auto;
-    padding: 1rem;
-    padding-right: 3rem;
+    position: relative;
+    padding: 1rem 2rem 2rem;
     width: 300px;
-    height: 100%;
+    max-width: 100vw;
     opacity: 0;
     transition: opacity 0.4s ease;
   }
 }
 
-.dv-Sidebar:hover,
 .dv-Sidebar.expanded {
   width: 300px;
+  max-width: 100vw;
+  overflow-y: auto;
+
   .dv-Sidebar__interior {
     visibility: visible;
     opacity: 1;
-  }
-  .dv-Sidebar__button {
-    left: calc(100% - 1.5rem);
   }
 }
 
@@ -121,12 +128,10 @@
 }
 
 .dv-Dashboard__content {
-  margin-right: auto;
+  position: relative;
+  max-width: $dashboard__width;
   margin-left: auto;
-  max-width: 1200px;
-  @media (max-width: 1310px) {
-    padding-left: 60px;
-  }
+  margin-right: auto;
 }
 
 .dv-Dashboard__tags {
@@ -186,14 +191,59 @@
 
 .dv-Dashboard__button {
   margin: 0;
-  padding: 0;
+  padding: 7px 6px 6px;
   height: 1rem;
-  border: none;
+  border: 1px solid black;
   background: transparent;
   cursor: pointer;
+  transition: color 200ms, border 200ms;
 
   -webkit-appearance: none;
   -moz-appearance: none;
+
+  &:hover, &:focus, &:active {
+    color: #22c8a3;
+    border-color: #22c8a3;
+  }
+
+  &--open-modal {
+    margin-top: 1em;
+    line-height: 1;
+    height: auto;
+  }
+
+  &--close-modal {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    margin: 0;
+    padding: 0.5rem 0.5rem 1.7rem;
+    border: none;
+  }
+
+  &--toggle-filters {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 36px;
+    margin-top: 1rem;
+    padding: 0 1rem;
+    font-size: 12px;
+  }
+}
+
+.dv-ReactMarkdown {
+  p, li {
+    font-size: inherit;
+    font-family: inherit;
+    line-height: inherit;
+  }
+  > :first-child {
+    margin-top: 0;
+  }
+  > :last-child {
+    margin-bottom: 0;
+  }
 }
 
 .dv-Modal {
@@ -206,7 +256,7 @@
   overflow: auto;
   margin-right: auto;
   margin-left: auto;
-  max-width: 1200px;
+  max-width: $dashboard__width;
   width: calc(100% - 2rem);
   border-radius: 4px;
   background-color: #fff;
@@ -236,8 +286,10 @@
 }
 
 .dv-Modal__key {
-  padding-bottom: 0.5rem;
   font-weight: bold;
+  font-size: inherit;
+  line-height: inherit;
+  margin: 0 0 0.5rem;
 }
 
 .ReactModal__Body--open,
@@ -255,8 +307,14 @@
     position: absolute;
     display: block;
     width: 100%;
-    height: 1px;
+    height: 2px;
     background: #333;
+    transition: background-color 200ms;
+
+    .dv-Dashboard__button:hover > &,
+    .dv-Sidebar__button:hover > & {
+      background: #22c8a3;
+    }
   }
   & > *:first-child {
     top: 50%;
@@ -267,12 +325,6 @@
     left: 50%;
     transform: translate(-50%, -50%) rotate(90deg);
   }
-}
-
-.dv-Dashboard__button-close {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
 }
 
 div#download_file {

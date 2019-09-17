@@ -2,7 +2,8 @@ import React from "react";
 import { ChartContainer, Title } from "@newamerica/meta";
 import Sidebar from "./Sidebar";
 import { DataTableWithSearch } from "@newamerica/data-table";
-import { ModalIcon, X } from "./lib/Icons";
+import { X } from "./lib/Icons";
+import ReactMarkdown from "react-markdown";
 import ReactModal from "react-modal";
 import { group } from "d3-array";
 
@@ -11,7 +12,8 @@ export default class Dashboard extends React.Component {
     super(props);
     ReactModal.setAppElement("body");
     this.state = {
-      showModal: false
+      showModal: false,
+      expandSidebar: false
     };
     Object.keys(this.props.filters[0]).forEach(name => {
       this.state[name] = this.props.filters.reduce((acc, cur) => {
@@ -22,64 +24,65 @@ export default class Dashboard extends React.Component {
       }, {});
     });
     this.columns = [
-      {
-        Header: "",
-        accessor: "id",
-        className: "dv-Dashboard__icon",
-        headerClassName: "not-sortable",
-        sortable: false,
-        minWidth: 50,
-        Cell: ({ value }) => (
-          <button
-            onClick={e => this.handleOpenModal(value)}
-            className="dv-Dashboard__button"
-          >
-            <ModalIcon />
-          </button>
-        )
-      },
       ...Object.keys(this.props.tableData[0])
-        .filter(d => d !== "id" && d !== "Link")
+        .filter(d => d !== "id")
         .map(d =>
           d === "Project"
-            ? {
-                Header: d,
-                accessor: d,
-                minWidth: 150,
-                Cell: row => {
-                  const link = row.original["Link"];
-                  if (link) {
-                    return (
-                      <a target="_blank" rel="noopener noreferrer" href={link}>
-                        {row.value}
-                      </a>
-                    );
-                  } else {
-                    return row.value;
-                  }
-                }
+          ? {
+            Header: d,
+            accessor: d,
+            minWidth: 180,
+            Cell: row => {
+              const id = row.original["id"];
+              if (id) {
+                return (
+                  <div>
+                    <ReactMarkdown
+                      source={row.value}
+                      className="dv-ReactMarkdown"
+                      linkTarget="_blank"
+                    />
+                    <button
+                      onClick={e => this.handleOpenModal(id)}
+                      className="dv-Dashboard__button dv-Dashboard__button--open-modal"
+                    >
+                      Read more
+                    </button>
+                  </div>
+                );
+              } else {
+                return row.value;
               }
-            : d === "Description"
-            ? {
-                Header: d,
-                accessor: d,
-                minWidth: 245
-              }
-            : {
-                Header: d,
-                accessor: d,
-                minWidth: 150
-              }
+            }
+          }
+          : {
+            Header: d,
+            accessor: d,
+            minWidth: d === "Description" ? 245 : 150,
+            Cell: row => (
+              <ReactMarkdown
+                source={row.value}
+                className="dv-ReactMarkdown"
+                linkTarget="_blank"
+              />
+            )
+          }
         )
     ];
     this.dataMap = group(this.props.popupData, d => d.id);
     this.handleOpenModal = this.handleOpenModal.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
+    this.handleSidebarExpand = this.handleSidebarExpand.bind(this);
     this.onFilterChange = this.onFilterChange.bind(this);
   }
 
   onFilterChange = (name, filter) => {
     this.setState({ [name]: filter });
+  };
+
+  handleSidebarExpand = (e) => {
+    const { expandSidebar } = this.state;
+    this.setState({ expandSidebar: !expandSidebar });
   };
 
   handleOpenModal = id => {
@@ -93,7 +96,7 @@ export default class Dashboard extends React.Component {
     const regionFilters = this.state["Operating Region"];
     const scaleFilters = this.state["Current Scale (People Served)"];
     const sdgFilters = this.state["SDG"];
-    const { showModal, modalContents } = this.state;
+    const { showModal, modalContents, expandSidebar } = this.state;
     let data = this.props.tableData
       .filter(val => {
         const scale = val["Current Scale (People Served)"];
@@ -130,14 +133,28 @@ export default class Dashboard extends React.Component {
         }
       });
     return (
+      <div>
       <ChartContainer>
         <div className="dv-Dashboard__content">
-          <Sidebar
-            onFilterChange={this.onFilterChange}
-            scaleFilters={scaleFilters}
-            regionFilters={regionFilters}
-            sdgFilters={sdgFilters}
-          />
+          <h1>Blockchain Impact Ledger</h1>
+        </div>
+      </ChartContainer>
+      <ChartContainer>
+        <Sidebar
+          onFilterChange={this.onFilterChange}
+          scaleFilters={scaleFilters}
+          regionFilters={regionFilters}
+          sdgFilters={sdgFilters}
+          expandSidebar={expandSidebar}
+          onSidebarExpand={this.handleSidebarExpand}
+        />
+        <div className="dv-Dashboard__content">
+          <button
+            className="dv-Dashboard__button dv-Dashboard__button--toggle-filters"
+            onClick={this.handleSidebarExpand}
+          >
+            Filter results
+          </button>
           <DataTableWithSearch
             columns={this.columns}
             data={data}
@@ -151,6 +168,13 @@ export default class Dashboard extends React.Component {
             className="dv-Modal"
             overlayClassName="dv-Modal__overlay"
           >
+            <button
+              onClick={this.handleCloseModal}
+              className="dv-Dashboard__button dv-Dashboard__button--close-modal"
+              aria-label="Close modal"
+            >
+              <X />
+            </button>
             <div className="dv-Modal__contents">
               {modalContents &&
                 Object.keys(modalContents).map(
@@ -158,24 +182,20 @@ export default class Dashboard extends React.Component {
                     key !== "id" &&
                     modalContents[key] && (
                       <div className="dv-Modal__item">
-                        <span className="dv-Modal__key">{key}</span>
-                        <span className="dv-Modal__value">
-                          {modalContents[key]}
-                        </span>
+                        <h3 className="dv-Modal__key">{key}</h3>
+                        <ReactMarkdown
+                          source={modalContents[key]}
+                          className="dv-ReactMarkdown"
+                          linkTarget="_blank"
+                        />
                       </div>
                     )
                 )}
             </div>
-            <button
-              onClick={this.handleCloseModal}
-              className="dv-Dashboard__button dv-Dashboard__button-close"
-              aria-label="Close modal"
-            >
-              <X />
-            </button>
           </ReactModal>
         </div>
       </ChartContainer>
+      </div>
     );
   }
 }

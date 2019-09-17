@@ -1,12 +1,12 @@
 import React from "react";
 import { CheckboxGroup } from "@newamerica/components";
+import { X } from "./lib/Icons";
 import slugify from "./lib/slugify";
 import { group } from "d3-array";
 
 export default class Sidebar extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { expanded: false };
     this.regionFilters = Object.keys(this.props.regionFilters).map(d => ({
       id: slugify(d),
       label: d,
@@ -25,15 +25,15 @@ export default class Sidebar extends React.Component {
     this.regionMap = group(this.regionFilters, d => d.id);
     this.scaleMap = group(this.scaleFilters, d => d.id);
     this.sdgMap = group(this.sdgFilters, d => d.id);
-    this.handleChange = this.handleChange.bind(this);
+    this.handleFilterChange = this.handleFilterChange.bind(this);
+    this.handleSidebarExpand = this.handleSidebarExpand.bind(this);
   }
 
-  expandSidebar = e => {
-    const { expanded } = this.state;
-    this.setState({ expanded: !expanded });
-  };
+  handleSidebarExpand = (e) => {
+    this.props.onSidebarExpand(e);
+  }
 
-  handleChange = (map, id, filterState) => {
+  handleFilterChange = (map, id, filterState) => {
     const obj = {};
     Object.keys(filterState).forEach(key => {
       obj[map.get(key)[0].label] = filterState[key];
@@ -42,20 +42,20 @@ export default class Sidebar extends React.Component {
   };
 
   render() {
-    const { expanded } = this.state;
+    const expandSidebar = this.props.expandSidebar;
     return (
-      <div className={`dv-Sidebar${expanded ? " expanded" : ""}`}>
-        <button className="dv-Sidebar__button" onClick={this.expandSidebar}>
-          Filters
-        </button>
+      <div className={`dv-Sidebar${expandSidebar ? " expanded" : ""}`}>
         <div className="dv-Sidebar__interior">
-          <div>
+            <button className="dv-Sidebar__button" onClick={this.handleSidebarExpand}>
+              <X/>
+            </button>
+            <h2>Filters</h2>
             <CheckboxGroup
               title="Operating Region"
               style={{ paddingBottom: "1rem", borderBottom: "solid 1px #ddd" }}
               options={this.regionFilters}
               onChange={filterState =>
-                this.handleChange(
+                this.handleFilterChange(
                   this.regionMap,
                   "Operating Region",
                   filterState
@@ -68,7 +68,7 @@ export default class Sidebar extends React.Component {
               style={{ padding: "1rem 0", borderBottom: "solid 1px #ddd" }}
               options={this.scaleFilters}
               onChange={filterState =>
-                this.handleChange(
+                this.handleFilterChange(
                   this.scaleMap,
                   "Current Scale (People Served)",
                   filterState
@@ -81,11 +81,10 @@ export default class Sidebar extends React.Component {
               style={{ paddingTop: "1rem" }}
               options={this.sdgFilters}
               onChange={filterState =>
-                this.handleChange(this.sdgMap, "SDG", filterState)
+                this.handleFilterChange(this.sdgMap, "SDG", filterState)
               }
               selectButtons={true}
             />
-          </div>
         </div>
       </div>
     );
