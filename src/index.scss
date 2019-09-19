@@ -22,6 +22,10 @@ $breakpoint: 768px;
 
 a {
   color: $color;
+
+  &:hover, &:active, &:focus {
+    color: darken($color, 10);
+  }
 }
 
 @mixin vertical-center {
