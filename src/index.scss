@@ -3,6 +3,8 @@
 @import "~@newamerica/meta/dist/styles.css";
 
 $dashboard__width: 1200px;
+$color: #2ebcb3;
+$breakpoint: 768px;
 
 @mixin transform($args) {
   -webkit-transform: $args;
@@ -16,6 +18,10 @@ $dashboard__width: 1200px;
   -moz-transition: $args;
   -o-transition: $args;
   transition: $args;
+}
+
+a {
+  color: $color;
 }
 
 @mixin vertical-center {
@@ -64,7 +70,7 @@ $dashboard__width: 1200px;
     -moz-appearance: none;
 
     &:hover, &:focus, &:active {
-      color: #22c8a3;
+      color: $color;
     }
   
   }
@@ -202,8 +208,8 @@ $dashboard__width: 1200px;
   -moz-appearance: none;
 
   &:hover, &:focus, &:active {
-    color: #22c8a3;
-    border-color: #22c8a3;
+    color: $color;
+    border-color: $color;
   }
 
   &--open-modal {
@@ -248,18 +254,20 @@ $dashboard__width: 1200px;
 
 .dv-Modal {
   position: absolute;
-  top: 30px;
+  top: 160px;
   right: 0;
-  bottom: 30px;
+  bottom: 0;
   left: 0;
   z-index: 600;
   overflow: auto;
   margin-right: auto;
   margin-left: auto;
-  max-width: $dashboard__width;
-  width: calc(100% - 2rem);
-  border-radius: 4px;
   background-color: #fff;
+  outline: 0;
+
+  @media (min-width: $breakpoint) {
+    top: 170px;
+  }
 }
 
 .dv-Modal__overlay {
@@ -269,20 +277,52 @@ $dashboard__width: 1200px;
   bottom: 0;
   left: 0;
   z-index: 600;
-  background-color: rgba(51, 51, 51, 0.3);
+  // background-color: rgba(51, 51, 51, 0.3);
 }
 
 .dv-Modal__contents {
-  display: flex;
-  flex-wrap: wrap;
   padding: 2rem;
+  max-width: calc(#{$dashboard__width} + 4rem);
+  margin: 0 auto
+}
+
+.dv-Modal__header {
+  max-width: 700px;
+  margin-bottom: 2rem;
+}
+
+@media (min-width: $breakpoint) {
+  .dv-Modal__items {
+    display: flex;
+    flex-wrap: wrap;
+  }
 }
 
 .dv-Modal__item {
   display: flex;
   flex-direction: column;
-  padding: 1rem;
-  width: 50%;
+  padding: 2rem 1rem 0 0;
+
+  @media (min-width: $breakpoint) {
+    width: 50%;
+  
+    &:nth-child(2n) {
+      padding: 2rem 0 0 1rem;
+    }
+  }
+
+  @media (min-width: $dashboard__width) {
+    width: 33%;
+
+    &:nth-child(2n) {
+      padding: 2rem 1rem 0 0;
+    }
+
+    &:nth-child(3n) {
+      padding: 2rem 0 0 1rem;
+    }
+  }
+
 }
 
 .dv-Modal__key {
@@ -300,20 +340,20 @@ $dashboard__width: 1200px;
 .dv-X {
   position: relative;
   display: inline-block;
-  width: 20px;
-  height: 20px;
+  width: 30px;
+  height: 30px;
   transform: rotate(45deg);
   & > * {
     position: absolute;
     display: block;
     width: 100%;
-    height: 2px;
+    height: 3px;
     background: #333;
     transition: background-color 200ms;
 
     .dv-Dashboard__button:hover > &,
     .dv-Sidebar__button:hover > & {
-      background: #22c8a3;
+      background: $color;
     }
   }
   & > *:first-child {
@@ -341,5 +381,5 @@ div#download_file span {
 }
 div#download_file span:hover {
   background-color: rgb(240, 240, 240);
-  border: 1px solid #22c8a3;
+  border: 1px solid $color;
 }
