@@ -17,7 +17,7 @@ const settings = {
           filters={data.filters}
         />,
         <div id="download_file">
-          <span onClick={() => create_csv(data.table)}>
+          <span onClick={() => create_csv(data.popup)}>
             Download Data File CSV
           </span>
         </div>
