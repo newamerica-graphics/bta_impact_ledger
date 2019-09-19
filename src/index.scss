@@ -4,6 +4,7 @@
 
 $dashboard__width: 1200px;
 $color: #2ebcb3;
+$color--hover: darken($color, 10);
 $breakpoint: 768px;
 
 @mixin transform($args) {
@@ -20,18 +21,35 @@ $breakpoint: 768px;
   transition: $args;
 }
 
-a {
-  color: $color;
-
-  &:hover, &:active, &:focus {
-    color: darken($color, 10);
-  }
-}
-
 @mixin vertical-center {
   top: 50%;
 
   @include transform(translateY(-50%));
+}
+
+a {
+  color: $color;
+  transition: color 200ms;
+
+  &:hover, &:active, &:focus {
+    color: $color--hover;
+  }
+}
+
+abbr {
+  cursor: help;
+  text-decoration: none;
+  margin-left: 0.5em;
+  width: 1.25em;
+  height: 1.25em;
+  padding-top: 0.15em;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  background-color: #666;
+  color: white;
+  font-weight: normal;
 }
 
 .dv-ChartContainer {

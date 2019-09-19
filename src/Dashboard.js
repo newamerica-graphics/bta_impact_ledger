@@ -19,6 +19,8 @@ export default class Dashboard extends React.Component {
       .filter(d => this.props.data[row][d] === "TRUE");
 
     this.modalDataMap = group(this.data, d => d.id);
+    this.modalKeys = this.filterKeys(this.meta.modal_row);
+    this.helpText = this.props.data[this.meta.help_text_row];
 
     this.state = {
       showModal: !!window.location.hash,
@@ -220,12 +222,16 @@ export default class Dashboard extends React.Component {
                 </div>
 
                 <div className="dv-Modal__items">
-                  {this.filterKeys(this.meta.modal_row).slice(4).map(
+                  {this.modalKeys.slice(4).map(
                     key =>
                       key !== "id" &&
                       modalContents[key] && (
                         <div className="dv-Modal__item">
-                          <h3 className="dv-Modal__key">{key}</h3>
+                          <h3 className="dv-Modal__key">
+                            {key}
+                            {this.helpText[key]
+                              && <abbr title={this.helpText[key]}><span>?</span></abbr>}
+                          </h3>
                           <ReactMarkdown
                             source={modalContents[key]}
                             className="dv-ReactMarkdown"
