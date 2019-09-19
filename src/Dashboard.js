@@ -11,12 +11,21 @@ export default class Dashboard extends React.Component {
   constructor(props) {
     super(props);
     ReactModal.setAppElement("body");
-    this.dataMap = group(this.props.popupData, d => d.id);
+
+    this.meta = this.props.meta[0];
+    this.data = this.props.data.slice(this.meta.number_meta_rows);
+
+    this.filterKeys = row => Object.keys(this.props.data[row])
+      .filter(d => this.props.data[row][d] === "TRUE");
+
+    this.modalDataMap = group(this.data, d => d.id);
+
     this.state = {
       showModal: !!window.location.hash,
-      modalContents: window.location.hash ? this.dataMap.get(window.location.hash.slice(1))[0] : null,
+      modalContents: window.location.hash ? this.modalDataMap.get(window.location.hash.slice(1))[0] : null,
       expandSidebar: false
     };
+
     Object.keys(this.props.filters[0]).forEach(name => {
       this.state[name] = this.props.filters.reduce((acc, cur) => {
         if (cur[name]) {
@@ -25,9 +34,9 @@ export default class Dashboard extends React.Component {
         return acc;
       }, {});
     });
-    this.columns = [
-      ...Object.keys(this.props.tableData[0])
-        .filter(d => d !== "id")
+
+    this.tableColumns = [
+      ...this.filterKeys(this.meta.table_row)
         .map(d =>
           d === "Project"
           ? {
@@ -71,7 +80,7 @@ export default class Dashboard extends React.Component {
           }
         )
     ];
-    
+
     this.handleOpenModal = this.handleOpenModal.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
     this.handleSidebarExpand = this.handleSidebarExpand.bind(this);
@@ -89,7 +98,7 @@ export default class Dashboard extends React.Component {
 
   handleOpenModal = id => {
     window.location.hash = id;
-    this.setState({ showModal: true, modalContents: this.dataMap.get(window.location.hash.slice(1))[0] });
+    this.setState({ showModal: true, modalContents: this.modalDataMap.get(window.location.hash.slice(1))[0] });
   };
   handleCloseModal() {
     window.location.hash = "";
@@ -101,7 +110,7 @@ export default class Dashboard extends React.Component {
     const scaleFilters = this.state["Current Scale (People Served)"];
     const sdgFilters = this.state["SDG"];
     const { showModal, modalContents, expandSidebar } = this.state;
-    let data = this.props.tableData
+    let tableData = this.data
       .filter(val => {
         const scale = val["Current Scale (People Served)"];
         if (!scale || scaleFilters[scale]) {
@@ -160,8 +169,8 @@ export default class Dashboard extends React.Component {
             Filter results
           </button>
           <DataTableWithSearch
-            columns={this.columns}
-            data={data}
+            columns={this.tableColumns}
+            data={tableData}
             defaultPageSize={10}
           />
           <ReactModal
@@ -187,7 +196,7 @@ export default class Dashboard extends React.Component {
                   </h3>
                   <h2>
                     <ReactMarkdown
-                      source={modalContents["Project"]}
+                      source={modalContents["Project--modal"]}
                       className="dv-ReactMarkdown"
                       linkTarget="_blank"
                     />
@@ -209,7 +218,7 @@ export default class Dashboard extends React.Component {
                 </div>
 
                 <div className="dv-Modal__items">
-                  {Object.keys(modalContents).slice(5).map(
+                  {this.filterKeys(this.meta.modal_row).slice(4).map(
                     key =>
                       key !== "id" &&
                       modalContents[key] && (

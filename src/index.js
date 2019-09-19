@@ -8,16 +8,19 @@ let data = null;
 
 const settings = {
   dashboard: el => {
-    // console.log(create_csv(data.table));
     ReactDOM.render(
       [
         <Dashboard
-          tableData={data.table}
-          popupData={data.popup}
+          data={data.modal}
+          meta={data.meta}
           filters={data.filters}
         />,
         <div id="download_file">
-          <span onClick={() => create_csv(data.popup)}>
+          <span onClick={() => create_csv(
+            data.modal.slice(data.meta[0].number_meta_rows),
+            Object.keys(data.modal[data.meta[0].csv_row])
+              .filter(d => data.modal[data.meta[0].csv_row][d] === "TRUE")
+          )}>
             Download Data File CSV
           </span>
         </div>
@@ -46,15 +49,13 @@ window.renderDataViz = function(el) {
   }
 };
 
-function create_csv(input) {
-  let keys = Object.keys(input[0]);
+function create_csv(input, keys) {
   let csv = "";
   csv += keys.join(",") + "\r\n";
-  // console.log(keys);
   input.forEach(function(rowObj) {
-    let row = Object.values(rowObj)
+    let row = keys
       .map(s => {
-        return s ? s.replace(/,/g, ";").replace(/\n/g, " ") : s;
+        return rowObj[s] ? rowObj[s].replace(/,/g, ";").replace(/\n/g, " ") : rowObj[s];
       })
       .join(",");
     csv += row + "\r\n";
