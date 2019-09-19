@@ -191,16 +191,18 @@ export default class Dashboard extends React.Component {
             {modalContents &&
               <div className="dv-Modal__contents">
                 <div className="dv-Modal__header">
-                  <h3>
-                    {modalContents["Organization"]}
-                  </h3>
-                  <h2>
-                    <ReactMarkdown
-                      source={modalContents["Project--modal"]}
-                      className="dv-ReactMarkdown"
-                      linkTarget="_blank"
-                    />
-                  </h2>
+                  <hgroup>
+                    <h3>
+                      {modalContents["Organization"]}
+                    </h3>
+                    <h2>
+                      <ReactMarkdown
+                        source={modalContents["Project--modal"]}
+                        className="dv-ReactMarkdown"
+                        linkTarget="_blank"
+                      />
+                    </h2>
+                  </hgroup>
                   <p>
                     <ReactMarkdown
                       source={modalContents["Description"]}
