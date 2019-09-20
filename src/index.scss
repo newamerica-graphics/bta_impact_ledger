@@ -43,6 +43,12 @@ abbr {
   text-decoration: none;
   border-bottom: 1.5px dotted #333;
   padding: 0 0.2em;
+  transition: background-color 200ms;
+
+  &:hover {
+    background-color: rgba($color, 0.5);
+    transition: background-color 1200ms;
+  }
 }
 
 .dv-ChartContainer {
