@@ -38,18 +38,11 @@ a {
 
 abbr {
   cursor: help;
-  text-decoration: none;
   margin-left: 0.5em;
-  width: 1.25em;
-  height: 1.25em;
-  padding-top: 0.15em;
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 50%;
-  background-color: #666;
-  color: white;
-  font-weight: normal;
+  background-color: rgba($color, 0.15);
+  text-decoration: none;
+  border-bottom: 1.5px dotted #333;
+  padding: 0 0.2em;
 }
 
 .dv-ChartContainer {

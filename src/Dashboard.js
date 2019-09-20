@@ -230,7 +230,7 @@ export default class Dashboard extends React.Component {
                           <h3 className="dv-Modal__key">
                             {key}
                             {this.helpText[key]
-                              && <abbr title={this.helpText[key]}><span>?</span></abbr>}
+                              && <abbr title={this.helpText[key]}>?</abbr>}
                           </h3>
                           <ReactMarkdown
                             source={modalContents[key]}
