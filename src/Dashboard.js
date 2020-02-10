@@ -11,10 +11,23 @@ export default class Dashboard extends React.Component {
   constructor(props) {
     super(props);
     ReactModal.setAppElement("body");
+
+    this.meta = this.props.meta[0];
+    this.data = this.props.data.slice(this.meta.number_meta_rows);
+
+    this.filterKeys = row => Object.keys(this.props.data[row])
+      .filter(d => this.props.data[row][d] === "TRUE");
+
+    this.modalDataMap = group(this.data, d => d.id);
+    this.modalKeys = this.filterKeys(this.meta.modal_row);
+    this.helpText = this.props.data[this.meta.help_text_row];
+
     this.state = {
-      showModal: false,
+      showModal: !!window.location.hash,
+      modalContents: window.location.hash ? this.modalDataMap.get(window.location.hash.slice(1))[0] : null,
       expandSidebar: false
     };
+
     Object.keys(this.props.filters[0]).forEach(name => {
       this.state[name] = this.props.filters.reduce((acc, cur) => {
         if (cur[name]) {
@@ -23,9 +36,9 @@ export default class Dashboard extends React.Component {
         return acc;
       }, {});
     });
-    this.columns = [
-      ...Object.keys(this.props.tableData[0])
-        .filter(d => d !== "id")
+
+    this.tableColumns = [
+      ...this.filterKeys(this.meta.table_row)
         .map(d =>
           d === "Project"
           ? {
@@ -69,7 +82,7 @@ export default class Dashboard extends React.Component {
           }
         )
     ];
-    this.dataMap = group(this.props.popupData, d => d.id);
+
     this.handleOpenModal = this.handleOpenModal.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
     this.handleSidebarExpand = this.handleSidebarExpand.bind(this);
@@ -86,9 +99,11 @@ export default class Dashboard extends React.Component {
   };
 
   handleOpenModal = id => {
-    this.setState({ showModal: true, modalContents: this.dataMap.get(id)[0] });
+    window.location.hash = id;
+    this.setState({ showModal: true, modalContents: this.modalDataMap.get(window.location.hash.slice(1))[0] });
   };
-  handleCloseModal = id => {
+  handleCloseModal() {
+    window.location.hash = "";
     this.setState({ showModal: false });
   };
 
@@ -97,7 +112,7 @@ export default class Dashboard extends React.Component {
     const scaleFilters = this.state["Current Scale (People Served)"];
     const sdgFilters = this.state["SDG"];
     const { showModal, modalContents, expandSidebar } = this.state;
-    let data = this.props.tableData
+    let tableData = this.data
       .filter(val => {
         const scale = val["Current Scale (People Served)"];
         if (!scale || scaleFilters[scale]) {
@@ -156,8 +171,8 @@ export default class Dashboard extends React.Component {
             Filter results
           </button>
           <DataTableWithSearch
-            columns={this.columns}
-            data={data}
+            columns={this.tableColumns}
+            data={tableData}
             defaultPageSize={10}
           />
           <ReactModal
@@ -175,23 +190,59 @@ export default class Dashboard extends React.Component {
             >
               <X />
             </button>
-            <div className="dv-Modal__contents">
-              {modalContents &&
-                Object.keys(modalContents).map(
-                  key =>
-                    key !== "id" &&
-                    modalContents[key] && (
-                      <div className="dv-Modal__item">
-                        <h3 className="dv-Modal__key">{key}</h3>
-                        <ReactMarkdown
-                          source={modalContents[key]}
-                          className="dv-ReactMarkdown"
-                          linkTarget="_blank"
-                        />
-                      </div>
-                    )
-                )}
-            </div>
+            {modalContents &&
+              <div className="dv-Modal__contents">
+                <div className="dv-Modal__header">
+                  <hgroup>
+                    <h3>
+                      {modalContents["Organization"]}
+                    </h3>
+                    <h2>
+                      <ReactMarkdown
+                        source={modalContents["Project--modal"]}
+                        className="dv-ReactMarkdown"
+                        linkTarget="_blank"
+                      />
+                    </h2>
+                  </hgroup>
+                  <p>
+                    <ReactMarkdown
+                      source={modalContents["Description"]}
+                      className="dv-ReactMarkdown"
+                      linkTarget="_blank"
+                    />
+                  </p>
+
+                  <h3 className="dv-Modal__key">Objective</h3>
+                  <ReactMarkdown
+                    source={modalContents["Objective"]}
+                    className="dv-ReactMarkdown"
+                    linkTarget="_blank"
+                  />
+                </div>
+
+                <div className="dv-Modal__items">
+                  {this.modalKeys.slice(4).map(
+                    key =>
+                      key !== "id" &&
+                      modalContents[key] && (
+                        <div className="dv-Modal__item">
+                          <h3 className="dv-Modal__key">
+                            {key}
+                            {this.helpText[key]
+                              && <abbr title={this.helpText[key]}><span>?</span></abbr>}
+                          </h3>
+                          <ReactMarkdown
+                            source={modalContents[key]}
+                            className="dv-ReactMarkdown"
+                            linkTarget="_blank"
+                          />
+                        </div>
+                      )
+                  )}
+                </div>
+              </div>
+            }
           </ReactModal>
         </div>
       </ChartContainer>
